@@ -34,19 +34,29 @@ router.post('/:target', async (req, res) => {
   }
 });
 
-// ✅ Add this GET route here too
 // GET /api/clicks/:user → fetch click count for a specific user
+
 router.get('/:user', async (req, res) => {
   try {
-    const userDoc = await Click.findOne({ username: req.params.user });
-    if (!userDoc) {
-      return res.json({ username: req.params.user, clickCount: 0 });
+    const doc = await Click.findOne({ username: req.params.user });
+    if (!doc) {
+      return res.json({
+        username: req.params.user,
+        clickCount: 0,
+        clickedBy: []
+      });
     }
-    res.json({ username: req.params.user, clickCount: userDoc.clickCount });
+    res.json({
+      username:   doc.username,
+      clickCount: doc.clickCount,
+      clickedBy:  doc.clickedBy
+    });
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 module.exports = router;
 
