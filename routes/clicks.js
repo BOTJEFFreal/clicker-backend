@@ -18,9 +18,9 @@ const Click = require('../models/Click');
       doc = await Click.create({ username: targetUser, clickCount: 0, clickedBy: [] });
     }
 
-    if (doc.clickedBy.includes(currentUser)) {
-      return res.status(403).json({ message: 'Already clicked for this user.' });
-    }
+    // if (doc.clickedBy.includes(currentUser)) {
+    //   return res.status(403).json({ message: 'Already clicked for this user.' });
+    // }
 
     // always allow another click
     doc.clickCount += 1;
