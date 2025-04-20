@@ -3,8 +3,8 @@ const express = require('express');
 const router = express.Router();
 const Click = require('../models/Click');
 
-// POST /api/clicks/:target → currentUser clicks for targetUser
-router.post('/:target', async (req, res) => {
+ // POST /api/clicks/:target → currentUser clicks for targetUser
+ router.post('/:target', async (req, res) => {
   const { currentUser } = req.body;
   const targetUser = req.params.target;
 
@@ -14,7 +14,6 @@ router.post('/:target', async (req, res) => {
 
   try {
     let doc = await Click.findOne({ username: targetUser });
-
     if (!doc) {
       doc = await Click.create({ username: targetUser, clickCount: 0, clickedBy: [] });
     }
@@ -23,6 +22,7 @@ router.post('/:target', async (req, res) => {
       return res.status(403).json({ message: 'Already clicked for this user.' });
     }
 
+    // always allow another click
     doc.clickCount += 1;
     doc.clickedBy.push(currentUser);
     await doc.save();
@@ -33,6 +33,7 @@ router.post('/:target', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 // GET /api/clicks/:user → fetch click count for a specific user
 
